@@ -1,9 +1,0 @@
-G:\AluraHackaton\sentimentAPI_backend-main-FINAL\src\main\java\com\sentiment\sentimentAPI\dto\Resultado.java
-G:\AluraHackaton\sentimentAPI_backend-main-FINAL\src\main\java\com\sentiment\sentimentAPI\service\PythonService.java
-G:\AluraHackaton\sentimentAPI_backend-main-FINAL\src\main\java\com\sentiment\sentimentAPI\dto\SentimentRequest.java
-G:\AluraHackaton\sentimentAPI_backend-main-FINAL\src\main\java\com\sentiment\sentimentAPI\SentimentController.java
-G:\AluraHackaton\sentimentAPI_backend-main-FINAL\src\main\java\com\sentiment\sentimentAPI\SentimentApiApplication.java
-G:\AluraHackaton\sentimentAPI_backend-main-FINAL\src\main\java\com\sentiment\sentimentAPI\repository\SentimentRecordRepository.java
-G:\AluraHackaton\sentimentAPI_backend-main-FINAL\src\main\java\com\sentiment\sentimentAPI\dto\SentimentResponse.java
-G:\AluraHackaton\sentimentAPI_backend-main-FINAL\src\main\java\com\sentiment\sentimentAPI\SentimentRestController.java
-G:\AluraHackaton\sentimentAPI_backend-main-FINAL\src\main\java\com\sentiment\sentimentAPI\model\SentimentRecord.java
