@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment AI | Customer Intelligence</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+</head>
+
+<body>
+    <div class="app-container">
+
+        <header class="main-header">
+            <div class="brand-group">
+                <div class="logo">
+                    <div class="logo-icon">CX</div>
+                    <div>
+                        <h2>Customer<span style="color:var(--primary)">Pulse</span></h2>
+                        <span class="subtitle-text">Inteligencia de Opinión Automática</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="header-controls">
+                <div class="kpi-group">
+                    <span class="kpi-label">Base de Datos:</span>
+                    <select id="statsLimitSelect" onchange="handleLimitChange(this)">
+                        <option value="50">Últimos 50 (Muestra)</option>
+                        <option value="500">Últimos 500 (Tendencia)</option>
+                        <option value="100000" selected>Todo el Historial</option>
+                        <option value="custom">Personalizado (X)</option>
+                    </select>
+                    <input type="number" id="customLimitInput" class="custom-limit-input hidden" placeholder="#" min="1"
+                        onchange="loadStats(this.value)">
+                </div>
+            </div>
+        </header>
+
+        <main class="dashboard-grid">
+
+            <!-- TOP METRICS (MARKET VALIDATION) -->
+            <section class="metrics-bar">
+                <div class="metric-card">
+                    <div class="metric-icon positive">😊</div>
+                    <div class="metric-info">
+                        <span class="label">Satisfacción (Positivo)</span>
+                        <div class="value-group">
+                            <span class="value" id="pctPositive">0%</span>
+                            <div class="progress-mini">
+                                <div class="fill fill-pos" id="barPositive"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon negative">😡</div>
+                    <div class="metric-info">
+                        <span class="label">Riesgo / Quejas (Negativo)</span>
+                        <div class="value-group">
+                            <span class="value" id="pctNegative">0%</span>
+                            <div class="progress-mini">
+                                <div class="fill fill-neg" id="barNegative"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon neutral">😐</div>
+                    <div class="metric-info">
+                        <span class="label">Neutro / Indiferente</span>
+                        <div class="value-group">
+                            <span class="value" id="pctNeutral">0%</span>
+                            <div class="progress-mini">
+                                <div class="fill fill-neu" id="barNeutral"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="metric-card highlight">
+                    <div class="metric-info">
+                        <span class="label">Volumen Total</span>
+                        <span class="value large" id="totalAnalyzed">0</span>
+                        <span class="desc">Opiniones Procesadas</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MAIN WORKSPACE -->
+            <div class="workspace-split">
+
+                <!-- LEFT: LIVE SIMULATOR -->
+                <section class="panel simulator-panel">
+                    <div class="panel-header">
+                        <h3>💬 Simulador de Atención Real</h3>
+                        <p>Prueba cómo el sistema prioriza tickets entrantes.</p>
+                    </div>
+
+                    <div class="lang-tabs">
+                        <button class="tab active" onclick="setLang('es', this)">🇪🇸 Español</button>
+                        <button class="tab" onclick="setLang('en', this)">🇺🇸 English</button>
+                        <button class="tab" onclick="setLang('pt', this)">🇧🇷 Português</button>
+                    </div>
+
+                    <div class="examples-area">
+                        <span class="label-mini">Casos de Uso Comunes:</span>
+                        <!-- Dynamic content populated by JS based on lang -->
+                        <div id="examplesList" class="chips-container-grid"></div>
+                    </div>
+
+                    <div class="input-wrapper">
+                        <textarea id="textInput" placeholder="Escribe el comentario del cliente aquí..."></textarea>
+                        <button class="analyze-btn" onclick="analyzeText()">
+                            <span>🔍 Analizar Impacto</span>
+                        </button>
+                    </div>
+
+                    <!-- Result Box -->
+                    <div id="inlineResult" class="result-box hidden">
+                        <div class="result-top">
+                            <span class="result-label">Clasificación:</span>
+                            <div id="resBadge" class="status-pill">-</div>
+                        </div>
+
+                        <div class="prob-bar">
+                            <div class="bar-bg">
+                                <div id="confidenceFill" class="bar-fill"></div>
+                            </div>
+                            <span id="resProbability" class="prob-text">0% Confianza</span>
+                        </div>
+
+                        <div id="featuresContainer" class="features-box hidden">
+                            <span class="label-mini">Palabras Detonantes:</span>
+                            <div id="featuresList" class="tags-list"></div>
+                        </div>
+
+                        <div id="actionSuggestion" class="action-alert hidden">
+                            ⚠️ <strong>Acción Recomendada:</strong> <span id="actionText">Priorizar respuesta
+                                inmediata.</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- RIGHT: BATCH & CHART -->
+                <section class="panel right-panel">
+                    <!-- BATCH UPLOAD -->
+                    <div class="sub-panel batch-panel">
+                        <div class="panel-header">
+                            <h3>📂 Procesamiento Masivo</h3>
+                            <p>Sube CSVs de encuestas o redes sociales.</p>
+                        </div>
+
+                        <div class="drop-zone-enhanced" id="dropZone">
+                            <div class="dz-content">
+                                <span class="dz-icon">📊</span>
+                                <div>
+                                    <strong>Arrastra tu archivo aquí</strong>
+                                    <span class="dz-sub">Formato: Texto en primera columna</span>
+                                </div>
+                            </div>
+                            <input type="file" id="fileInput" accept=".csv" hidden>
+                        </div>
+
+                        <div class="batch-controls">
+                            <span id="fileName" class="file-status">Esperando archivo...</span>
+                            <button class="secondary-btn" onclick="uploadBatch()">Procesar Datos</button>
+                        </div>
+
+                        <div id="batchResults" class="batch-table-wrapper hidden">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Comentario</th>
+                                        <th>Sentimiento</th>
+                                        <th>Score</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="batchTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- TREND CHART -->
+                    <div class="sub-panel chart-panel">
+                        <div class="panel-header slim">
+                            <h3>📈 Tendencia de Marca</h3>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="sentimentChart"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Hidden select for functional compatibility -->
+    <select id="langSelect" hidden>
+        <option value="es">es</option>
+    </select>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
