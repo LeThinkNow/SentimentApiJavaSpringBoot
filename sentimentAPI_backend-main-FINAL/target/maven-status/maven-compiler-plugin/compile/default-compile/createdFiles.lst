@@ -1,0 +1,9 @@
+com\sentiment\sentimentAPI\repository\SentimentRecordRepository.class
+com\sentiment\sentimentAPI\dto\SentimentRequest.class
+com\sentiment\sentimentAPI\SentimentRestController.class
+com\sentiment\sentimentAPI\dto\Resultado.class
+com\sentiment\sentimentAPI\service\PythonService.class
+com\sentiment\sentimentAPI\SentimentController.class
+com\sentiment\sentimentAPI\SentimentApiApplication.class
+com\sentiment\sentimentAPI\model\SentimentRecord.class
+com\sentiment\sentimentAPI\dto\SentimentResponse.class
