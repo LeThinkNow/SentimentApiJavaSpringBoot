@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8080";
+const API_URL = "https://sentimentapijavaspringboot.onrender.com";
 let sentimentChart = null;
 let currentLang = 'es';
 
@@ -341,4 +341,5 @@ function exportBatchCSV() {
     link.click();
     document.body.removeChild(link);
 }
+
 
